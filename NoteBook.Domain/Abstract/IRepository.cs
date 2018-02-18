@@ -11,5 +11,7 @@ namespace NoteBook.Domain.Abstract
     {
         IQueryable<State> States { get; }
         IQueryable<AnOrder> Orders { get; }
+
+        AnOrder SaveOrder(AnOrder _order);
     }
 }

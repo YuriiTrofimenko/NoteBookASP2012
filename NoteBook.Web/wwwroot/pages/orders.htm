@@ -2,18 +2,18 @@
     <div class="row">
         <div class="col-6" id="page-container"></div>
         <div class="col-6">
-            <!--<form id="form">
+            <form id="form">
                 <div class="form-group">
-                    <label for="section-title">Заголовок</label>
-                    <input class="form-control" type="text" id="section-title">
+                    <label for="order-customer">Заказчик</label>
+                    <input class="form-control" type="text" id="order-customer" name="order-customer">
                 </div>
                 <div class="form-group">
-                    <label for="section-content">Описание услуги</label>
-                    <textarea class="form-control" id="section-content" rows="5"></textarea>
+                    <label for="order-description">Описание заказа</label>
+                    <textarea class="form-control" id="order-description" name="order-description" rows="5"></textarea>
                 </div>
-                <input type="hidden" value="" id="section-id">
+                <input type="hidden" value="" id="order-id">
                 <button type="submit">Сохранить</button>
-            </form>-->
+            </form>
         </div>
     </div>
 </div>
@@ -22,7 +22,9 @@
 
 		var $container = $(this).find("#page-container");
 
-		return function(params) {
+		return function (params) {
+
+		    $('form').hide();
 
 			function populateTable() {
 				$.ajax({
@@ -60,15 +62,15 @@
 							//
 						  	$container.html(template.render(responseText));
 
-						  	//
-						  	/*$('tbody th').click(function(event){
+					        //При помощи $ находим ячейки ИД и устанавливаем им обработчики клика
+						  	$('tbody th').click(function(event){
 
-								//
+								//Блокируем отправку формы
 								event.preventDefault();
-								//
+						  	    //Асинхронно запрашиваем у контроллера Default информацию об одном заказе
 								$.ajax({
 									type: 'POST',
-                                    url: '/Admin/DoAction?action=get-page-data&id=' + $(event.target).text(),
+									url: '/Default/DoAction?action=order&id=' + $(event.target).text(),
 									//contentType: 'text/plain',
 									cache: false
 							  	}).done(function(responseText, textStatus, jqXHR) {
@@ -78,9 +80,9 @@
 											//
 											//console.log(responseText.title);
 
-										  	$('#section-id').val(responseText.id);
-										  	$('#section-title').val(responseText.title);
-										  	$('#section-content').val(responseText.content);
+										  	$('#order-id').val(responseText.id);
+										  	$('#order-customer').val(responseText.cust);
+										  	$('#order-description').val(responseText.descr);
 
 										  	$('form').fadeIn(600);
 									  } else {
@@ -97,7 +99,7 @@
 									// alert("Произошла ошибка. Обратитесь к разработчику сайта");
 							  	});
 							});
-						  	//
+						  	//Обрабатываем клик по кнопке Сохранить на форме
 						  	$('form button').click(function(event){
 
 								//
@@ -105,12 +107,12 @@
 								//
 								$.ajax({
 									type: 'POST',
-                                    url: '/Admin/DoAction?action=edit-page-data&id='
-									+ $('#section-id').val()
-									+ '&title='
-									+ encodeURIComponent($('#section-title').val())
-									+ '&content='
-									+ encodeURIComponent($('#section-content').val()),
+									url: '/Default/DoAction?action=order-edit&id='
+									+ $('#order-id').val()
+									+ '&order-customer='
+									+ encodeURIComponent($('#order-customer').val())
+									+ '&order-description='
+									+ encodeURIComponent($('#order-description').val()),
 									//contentType: 'text/plain',
 									cache: false
 							  	}).done(function(responseText, textStatus, jqXHR) {
@@ -136,7 +138,7 @@
 									$(".loader").css("display", "none");
 									// alert("Произошла ошибка. Обратитесь к разработчику сайта");
 							  	});
-							});*/
+							});
 					  } else {
 
 					  	alert("Произошла ошибка. Обратитесь к разработчику сайта");

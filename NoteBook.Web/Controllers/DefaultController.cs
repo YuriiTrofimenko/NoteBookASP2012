@@ -28,8 +28,8 @@ namespace NoteBook.Web.Controllers
             return View();
         }
 
-        //[HttpPost]
-        [HttpGet]
+        [HttpPost]
+        //[HttpGet]
         public JsonResult DoAction()
         {
             dynamic result = new { };
@@ -102,12 +102,62 @@ namespace NoteBook.Web.Controllers
                             }
                             break;
                         }
+                    case "order-edit":
+                        {
+                            if (Request["id"] != null)
+                            {
+                                try
+                                {
+                                    int selectedId = Int32.Parse(Request["id"]);
+
+                                    /*AnOrder order =
+                                        (from o in mRepository.Orders
+                                         where o.id == id
+                                         select o
+                                        ).Single();*/
+
+                                    State state =
+                                        (from s in mRepository.States
+                                         where s.name == "created"
+                                         select s
+                                        ).Single();
+
+                                    AnOrder order = new AnOrder()
+                                    {
+                                        id = selectedId,
+                                        customer_name = Request["order-customer"],
+                                        description = Request["order-description"],
+                                        created_at = new DateTime(),
+                                        state_id = state.id,
+                                        State = state
+                                    };
+
+                                    result = mRepository.SaveOrder(order);
+
+                                    /*result =
+                                        new
+                                        {
+                                            id = order.id
+                                            ,
+                                            descr = order.description
+                                            ,
+                                            cust = order.customer_name
+                                        };*/
+                                }
+                                catch (Exception ex)
+                                {
+
+                                    result = new { error = ex.Message };
+                                }
+                            }
+                            break;
+                        }
                     default:
                         break;
                 }
             }
-            //return Json(result);
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(result);
+            //return Json(result, JsonRequestBehavior.AllowGet);
         }
     }
 }

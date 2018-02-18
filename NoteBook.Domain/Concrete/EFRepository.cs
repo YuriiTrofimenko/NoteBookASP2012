@@ -16,5 +16,32 @@ namespace NoteBook.Domain.Concrete
 
         public IQueryable<State> States { get { return db.States;} }
         public IQueryable<AnOrder> Orders { get { return db.AnOrders; } }
+
+        public AnOrder SaveOrder(AnOrder _order)
+        {
+            AnOrder result = null;
+            try
+            {
+                AnOrder dbEntry = db.AnOrders.Find(_order.id);
+                //Если запись о проекте существует - обновляем ее данные
+                if (dbEntry != null)
+                {
+                    dbEntry.customer_name = _order.customer_name;
+                    dbEntry.description = _order.description;
+                }
+                //Если нет - создаем запись
+                else
+                {
+                    db.AnOrders.Add(_order);
+                }
+                db.SaveChanges();
+                result = db.AnOrders.Find(_order.id);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return result;
+        }
     }
 }
